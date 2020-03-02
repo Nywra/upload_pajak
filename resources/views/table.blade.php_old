@@ -1,5 +1,5 @@
 <table target="_blank" class="table table-hover table-condensed table-striped data-table" >
-  <caption>List of Penjualan</caption>
+  <caption>List of Pajak</caption>
   <thead class="thead-light">
     <tr>
       <th scope="col">No</th>
@@ -25,7 +25,7 @@
       <td>{{$no++}}</td>
       <td>{{$data["no_struk"]}}</td>
       <td>{{$data["no_register"]}}</td>
-      <td>{{($data["tanggal"] != '1970-01-01 00:00:00')?date('d/m/Y H:i', strtotime($data["tanggal"])):''}}</td>
+      <td>{{$data["tanggal"]}}</td>
       <td>{{$data["item"]}}</td>
       <td class="text-center">{{$data["qty"]}}</td>
       <td>Rp. {{number_format($data["jumlah"])}}</td>

@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <head>
     <!-- Required meta tags -->
-    
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-    <title>Grutty</title>
+    <title>UPLOAD Pajak</title>
   </head>
   <style type="text/css">
       body {
@@ -46,11 +46,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
-                    <h2 class="text-center"><b>DATA PENJUALAN</b></h2>
+                    <h2 class="text-center"><b>DATA PAJAK</b></h2>
                     <hr style="border-bottom:1px solid grey">
                     
-                    <button class="btn btn-success text-white" onclick="document.getElementById('file').click()"><i class="fa fa-file"></i> Upload</button> <button class="btn btn-danger text-white" onclick="delete_data()"><i class="fa fa-eraser"></i> Clear Table</button> 
-                    <button class="btn btn-primary" onclick="window.location.href = 'pajak.xlsx' "><i class="fa fa-download"></i> Download XLS Upload</button>
+                    <button class="btn btn-success text-white" onclick="document.getElementById('file').click()"><i class="fa fa-file"></i> Upload</button> <button class="btn btn-danger text-white" onclick="location.href = 'clear_db' "><i class="fa fa-eraser"></i> Clear Table</button> 
+                    <button class="btn btn-primary" onclick="window.location.href = 'pajak.xlsx' "><i class="fa fa-download"></i> Download Template</button>
                     <hr>
                     <div class="row">
                       <div class="col-5">
@@ -148,19 +148,6 @@
                 $('.data-table').DataTable();
             }
         );
-        
-        function delete_data(){
-            $.ajax({
-               url: "clear_db",
-               success: function(e){
-                   alert("Data berhasil dihapus");
-                   location.reload();
-               },
-               error: function(e){
-                   alert("Something Error");
-               }
-            });
-        }
 
         function filterz(){
           var date1 = $('#date1').val();

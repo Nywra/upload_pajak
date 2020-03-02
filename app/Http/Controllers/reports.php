@@ -74,8 +74,8 @@ class reports extends Controller
 				"piutang"		=> $data->piutang,
 				"kembalian"		=> $data->kembalian,
 				"sisa_saldo"	=> $data->sisa_saldo
-
 			);
+			
 			array_push($datas, $data_array);
 		}
 		echo view('table', array("datas" => $datas))->render();
@@ -83,8 +83,9 @@ class reports extends Controller
 
 	public function clear_database(){
 		//data_table::truncate();
-		DB::table('tb_pajak')->delete();
-		return redirect('/Home');
+		$delete = DB::table('tb_pajak')->delete();
+		
+		
 	}
 
 
@@ -99,15 +100,67 @@ class reports extends Controller
 
 		$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 		$spreadsheet = $reader->load($file_path);
-		$sheetData = $spreadsheet->getSheet(1)->toArray();
+		$sheetData = $spreadsheet->getSheet(0)->toArray();
 
-		$no = 3;
+		$no = 0;
 		for($i = 1;$i < count($sheetData);$i++)
 		{
 	 		if($i > $no){
-	 			if($sheetData[$i][1] != null && $sheetData[$i][2] != null){
+	 		    $harga = ($sheetData[$i][9] != null)?str_replace(",","",$sheetData[$i][9]):0;
+	 		    if($harga == null){
+	 		        $harga = 0;
+	 		    }
+	 		    
+	 		    $jumlah = ($sheetData[$i][10] != null)?str_replace(" ","",str_replace(",","",$sheetData[$i][10])):0;
+	 		    if($jumlah == null){
+	 		        $jumlah = 0;
+	 		    }
+	 		    
+	 		    $total_qty = ($sheetData[$i][11] != null)?str_replace(",","",$sheetData[$i][11]):0;
+	 		    if($total_qty == null){
+	 		        $total_qty = 0;
+	 		    }
+	 		    
+	 		    $total_bayar = ($sheetData[$i][12] != null)?preg_replace('/\s+/', '', str_replace(",","",$sheetData[$i][12])):0;
+	 		    if($total_bayar == null){
+	 		        $total_bayar = 0;
+	 		    }
+	 		    
+	 		    $promo = ($sheetData[$i][13] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][13])):0;
+	 		    if($promo == null){
+	 		        $promo = 0;
+	 		    }
+	 		    
+	 		    $saldo_konsumen = ($sheetData[$i][14] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][14])):0;
+	 		    if($saldo_konsumen == null){
+	 		        $saldo_konsumen = 0;
+	 		    }
+	 		    
+	 		    $retur_penjualan = ($sheetData[$i][15] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][15])):0;
+	 		    if($retur_penjualan == null){
+	 		        $retur_penjualan = 0;
+	 		    }
+	 		    
+	 		    $piutang = ($sheetData[$i][16] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][16])):0;
+	 		    if($piutang == null){
+	 		        $piutang = 0;
+	 		    }
+	 		    
+	 		    $kembalian = ($sheetData[$i][17] != null)?preg_replace('/\s+/', '',str_replace(")","",str_replace("(", "-", str_replace(",","",$sheetData[$i][17]))))
+		 										:0;
+		 		if($kembalian == null){
+		 		    $kembalian = 0;
+		 		}
+		 		
+		 		$sisa_saldo = ($sheetData[$i][17] != null)?
+		 										preg_replace('/\s+/', '',str_replace(")","",str_replace("(", "-", str_replace(",","",$sheetData[$i][18]))))
+		 										:0;
+		 		if($sisa_saldo == null){
+		 		    $sisa_saldo = 0;
+		 		}
+	 			if($sheetData[$i][1] != null){
 		 			$orgDate = str_replace(".", ":",$sheetData[$i][3]);  
-	    			$newDate = date("Y-m-d", strtotime($orgDate));
+	    			$newDate = date("Y-m-d H:i:s", strtotime($orgDate));
 		 			$data = array(
 		 				"no_struk" 			=> $sheetData[$i][1],
 		 				"no_register" 		=> $sheetData[$i][2],
@@ -117,20 +170,16 @@ class reports extends Controller
 		 				"customer" 			=> $sheetData[$i][6],
 		 				"item" 				=> $sheetData[$i][7],
 		 				"qty" 				=> $sheetData[$i][8],
-		 				"harga" 			=> ($sheetData[$i][9] != null)?str_replace(",","",$sheetData[$i][9]):0,
-		 				"jumlah" 			=> ($sheetData[$i][10] != null)?str_replace(" ","",str_replace(",","",$sheetData[$i][10])):0,
-		 				"total_qty" 		=> ($sheetData[$i][11] != null)?str_replace(",","",$sheetData[$i][11]):0,
-		 				"total_bayar" 		=> ($sheetData[$i][12] != null)?preg_replace('/\s+/', '', str_replace(",","",$sheetData[$i][12])):0,
-		 				"promo" 			=> ($sheetData[$i][13] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][13])):0,
-		 				"saldo_konsumen" 	=> ($sheetData[$i][14] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][14])):0,
-		 				"retur_penjualan"	=> ($sheetData[$i][15] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][15])):0,
-		 				"piutang"			=> ($sheetData[$i][16] != null)?preg_replace('/\s+/', '',str_replace(",","",$sheetData[$i][16])):0,
-		 				"kembalian"			=> ($sheetData[$i][17] != null)?
-		 										preg_replace('/\s+/', '',str_replace(")","",str_replace("(", "-", str_replace(",","",$sheetData[$i][17]))))
-		 										:0,
-		 				"sisa_saldo"		=> ($sheetData[$i][17] != null)?
-		 										preg_replace('/\s+/', '',str_replace(")","",str_replace("(", "-", str_replace(",","",$sheetData[$i][18]))))
-		 										:0,
+		 				"harga" 			=> $harga,
+		 				"jumlah" 			=> $jumlah,
+		 				"total_qty" 		=> $total_qty,
+		 				"total_bayar" 		=> $total_bayar,
+		 				"promo" 			=> $promo,
+		 				"saldo_konsumen" 	=> $saldo_konsumen,
+		 				"retur_penjualan"	=> $retur_penjualan,
+		 				"piutang"			=> $piutang,
+		 				"kembalian"			=> $kembalian,
+		 				"sisa_saldo"		=> $sisa_saldo,
 		 			);
 		 			
 		 			DB::table('tb_pajak')->insert($data);	//return redirect('/');
